@@ -24,15 +24,37 @@ const Login = ({ setIsAuthenticated }) => {
     return newErrors;
   };
 
-  const handlelogin=()=>{
+  const handlelogin=async ()=>{
     const formErrors = validate();
     if (Object.keys(formErrors).length === 0) {
-      setIsAuthenticated(true);
-      navigate('/meals');
-    } else {
-      setErrors(formErrors);
+      try{
+     const response = await fetch('',
+      {method:'POST',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({email,password})
+     });
+     const data = await response.json();
+
+     if(data.success)
+      {
+        setIsAuthenticated(true);
+        navigate('/meals');
+      }
+      else{
+        setErrors({general: data.message || 'Login failed'});
+      }
+    }
+    catch(error)
+    {
+      setErrors({general: "An error Occured. Please try again later"});
     }
   }
+     else {
+      setErrors(formErrors);
+    }
+  };
 
   return (
     <div className="loginbody">
