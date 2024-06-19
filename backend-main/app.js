@@ -15,6 +15,8 @@ const app = express();
 
 const corsOptions = {
     origin: 'http://localhost:5173',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: ['Content-Type', 'Authorization'],
     optionsSuccessStatus: 200 // Some legacy browsers choke on 204
   };
 
@@ -23,7 +25,7 @@ app.use(express.json())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
 app.use('/api/meals',cors(corsOptions), mealsRouter);
-app.use('/api/user', authRouter);
+app.use('/api/user',cors(corsOptions), authRouter);
 app.use(notFound);
 app.use(errorHandler);
 

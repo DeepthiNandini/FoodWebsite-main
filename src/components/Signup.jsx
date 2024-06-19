@@ -9,7 +9,7 @@ const Signup = ({ setIsAuthenticated }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [phone, setPhone] = useState('');
+  const [mobile, setmobile] = useState('');
 
   const [errors, setErrors] = useState({});
 
@@ -31,35 +31,56 @@ const Signup = ({ setIsAuthenticated }) => {
     } else if (password.length < 6) {
       newErrors.password = '*Password must be at least 6 characters';
     }
-    if (!phone) {
-      newErrors.phone = '*Phone number is required';
-    } else if (!/^\d{10}$/.test(phone)) {
-      newErrors.phone = '*Phone number must be 10 digits';
-    }else if (/[a-zA-Z]/.test(phone)) {
-        newErrors.phone = '*Phone number should not contain letters';
+    if (!mobile) {
+      newErrors.mobile = '*mobile number is required';
+    } else if (!/^\d{10}$/.test(mobile)) {
+      newErrors.mobile = '*mobile number must be 10 digits';
+    }else if (/[a-zA-Z]/.test(mobile)) {
+        newErrors.mobile = '*mobile number should not contain letters';
       }
     return newErrors;
   };
 
+
+
+  // const handlelogin=async ()=>{
+  //   const formErrors = validate();
+  //   if (Object.keys(formErrors).length === 0) {
+  //     try{
+  //       console.log("hello");
+  //    const response = await fetch("http://localhost:5000/api/user/login",
+  //     { 
+  //       method:'POST',
+  //       headers:{
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({email,password})
+  //    });
+
+
+
   const handleSignup = async () => {
     const formErrors = validate();
+    console.log("helo");
     if (Object.keys(formErrors).length === 0) {
       try{
-        const response = await fetch("",
+        const response = await fetch("http://localhost:5000/api/user/createUser",
           {
             method:"POST",
             headers:{
-              'Content-Type': "application-json"
+              'Content-Type': "application/json"
             },
-            body: JSON.stringify({name,email,password,phone})
+            body: JSON.stringify({name,email,mobile,password})
           }
         )
-      
-      const data =await Signup.json();
+        //console.log(response);
 
-      if(data.success){
-      setIsAuthenticated(true);
-      navigate('/login');
+      const data = await response.json();
+      console.log(data);
+
+      if(data.message == "User created successfully"){
+        setIsAuthenticated(true);
+        navigate('/login');
       }
       else{
         setErrors({general:data.message || "Sign Up Failed"})
@@ -116,15 +137,15 @@ const Signup = ({ setIsAuthenticated }) => {
             {errors.password && <div className="error">{errors.password}
           </div>}
           <div className="logininput">
-            <img src={Email} alt="Phone Icon" />
+            <img src={Email} alt="mobile Icon" />
             <input
               type="tel"
-              placeholder='Phone Number'
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              placeholder='mobile Number'
+              value={mobile}
+              onChange={(e) => setmobile(e.target.value)}
             />
              </div>
-            {errors.phone && <div className="error">{errors.phone}
+            {errors.mobile && <div className="error">{errors.mobile}
           </div>}
         </div>
         <div className="submit-container">

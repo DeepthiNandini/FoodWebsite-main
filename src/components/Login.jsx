@@ -18,7 +18,7 @@ const Login = ({ setIsAuthenticated }) => {
     }
     if (!password) {
       newErrors.password = '*Password is required';
-    } else if (password.length < 8) {
+    } else if (password.length < 0) {
       newErrors.password = '*Password must be at least 8 characters';
     }
     return newErrors;
@@ -28,16 +28,22 @@ const Login = ({ setIsAuthenticated }) => {
     const formErrors = validate();
     if (Object.keys(formErrors).length === 0) {
       try{
-     const response = await fetch('',
-      {method:'POST',
-      headers:{
+        //console.log("hello");
+     const response = await fetch("http://localhost:5000/api/user/login",
+      { 
+        method:'POST',
+        headers:{
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({email,password})
      });
-     const data = await response.json();
 
-     if(data.success)
+     //console.log(response.json());
+     
+     const data = await response.json();
+    //  console.log(data);
+
+     if(data.message == "Authenticated successful")
       {
         setIsAuthenticated(true);
         navigate('/meals');
