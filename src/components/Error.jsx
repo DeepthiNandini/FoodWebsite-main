@@ -1,4 +1,3 @@
-import logo from "../assets/food-logo.png";
 import { Player } from '@lottiefiles/react-lottie-player';
 import Lottie from "../assets/Nofood.json";
 export default function Error({ title, message }) {
