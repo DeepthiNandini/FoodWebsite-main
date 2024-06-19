@@ -3,7 +3,7 @@ import Password from '../assets/password.png';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Forgotpassword=()=>{
+const Forgotpassword=({setIsAuthenticated})=>{
 const navigate =useNavigate();
 const [email,setEmail]=useState('');
 const [password,setPassword]=useState('');
@@ -32,19 +32,46 @@ if (!email) {
             else if(newpassword!==password)
                 {
                     newErrors.newpassword='Passwords do not match';
-                    newErrors.password='Passwords do not match';
                 }
                 return newErrors;
 
 };
-const handleforgot=()=>{
+const handleforgot= async()=>{
     const formErrors = validate();
     if (Object.keys(formErrors).length === 0) {
+      try{
+      const response = await fetch("",
+        {
+          method:"POST",
+          headers:{
+            'constent-Type': 'application-json'
+          },
+        body:JSON.stringify({password,newpassword})
+        }
+      );
+
+      const data = await response.json();
+
+      if(data.success)
+        {
+          setIsAuthenticated(true);
       navigate('/login');
-    } else {
+        }
+        else{
+          setErrors({general:data.message || 'Reset Failed'})
+        }
+
+    } 
+    catch(error)
+    {
+      setErrors({general: "An error occured. Please try agai Later"})
+    }
+    }
+    else {
       setErrors(formErrors);
     }
   }
+
 
 return (
     <div className="loginbody">

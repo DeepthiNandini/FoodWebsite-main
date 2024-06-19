@@ -41,11 +41,34 @@ const Signup = ({ setIsAuthenticated }) => {
     return newErrors;
   };
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     const formErrors = validate();
     if (Object.keys(formErrors).length === 0) {
+      try{
+        const response = await fetch("",
+          {
+            method:"POST",
+            headers:{
+              'Content-Type': "application-json"
+            },
+            body: JSON.stringify({name,email,password,phone})
+          }
+        )
+      
+      const data =await Signup.json();
+
+      if(data.success){
       setIsAuthenticated(true);
       navigate('/login');
+      }
+      else{
+        setErrors({general:data.message || "Sign Up Failed"})
+      }
+      }
+      catch(error)
+      {
+        setErrors({general: "An error Occured. Please try again later"})
+      }
     } else {
       setErrors(formErrors);
     }
